@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shopping List</string>
     <string name="add_shop_item_content_description">Add new shop item</string>
+    <string name="note_deleted">Item %1$s deleted</string>
 </resources>
