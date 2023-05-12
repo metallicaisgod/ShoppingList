@@ -2,4 +2,9 @@
     <string name="app_name">Shopping List</string>
     <string name="add_shop_item_content_description">Add new shop item</string>
     <string name="note_deleted">Item %1$s deleted</string>
+    <string name="shop_item_name">Name</string>
+    <string name="shop_item_count">Count</string>
+    <string name="btn_save">Save</string>
+    <string name="wrong_name">Wrong name</string>
+    <string name="wrong_count">Wrong count</string>
 </resources>
