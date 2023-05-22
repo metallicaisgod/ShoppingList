@@ -6,7 +6,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 @BindingAdapter("errorInputName")
-fun bindErrorInputName(textInputLayout: TextInputLayout, error: Boolean){
+fun bindErrorInputName(textInputLayout: TextInputLayout, error: Boolean) {
     textInputLayout.error = if (error) {
         textInputLayout.context.getString(R.string.wrong_name)
     } else {
@@ -15,7 +15,7 @@ fun bindErrorInputName(textInputLayout: TextInputLayout, error: Boolean){
 }
 
 @BindingAdapter("errorInputCount")
-fun bindErrorInputCount(textInputLayout: TextInputLayout, error: Boolean){
+fun bindErrorInputCount(textInputLayout: TextInputLayout, error: Boolean) {
     textInputLayout.error = if (error) {
         textInputLayout.context.getString(R.string.wrong_count)
     } else {
@@ -25,6 +25,11 @@ fun bindErrorInputCount(textInputLayout: TextInputLayout, error: Boolean){
 
 //можно использовать в разметке String.valueOf(number) вместо этого адаптера
 @BindingAdapter("numberAsText")
-fun bindNumberAsText(textInputEditText: TextInputEditText, number: Int){
-    textInputEditText.setText(number.toString())
+fun bindNumberAsText(textInputEditText: TextInputEditText, number: Int) {
+    val text = if (number == 0) {
+        textInputEditText.context.getString(R.string.default_one_count)
+    } else {
+        number.toString()
+    }
+    textInputEditText.setText(text)
 }

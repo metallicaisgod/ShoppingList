@@ -7,4 +7,5 @@
     <string name="btn_save">Save</string>
     <string name="wrong_name">Wrong name</string>
     <string name="wrong_count">Wrong count</string>
+    <string name="default_one_count">1</string>
 </resources>
