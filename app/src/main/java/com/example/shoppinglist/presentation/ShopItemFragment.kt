@@ -1,6 +1,8 @@
 package com.example.shoppinglist.presentation
 
+import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
 import com.example.shoppinglist.domain.ShopItem
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class ShopItemFragment : Fragment() {
 
@@ -120,19 +123,43 @@ class ShopItemFragment : Fragment() {
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
         binding.button.setOnClickListener {
-            viewModel.editShopItem(
-                binding.tietName.text?.toString(),
-                binding.tietCount.text?.toString()
-            )
+//            viewModel.editShopItem(
+//                binding.tietName.text?.toString(),
+//                binding.tietCount.text?.toString()
+//            )
+            thread {
+                context?.contentResolver?.update(
+                    Uri.parse("content://com.example.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put("id", shopItemId)
+//                        put("name", binding.tietName.text?.toString())
+//                        put("count", binding.tietCount.text?.toString()?.toInt())
+//                        put("enabled", true)
+                    },
+                    null,
+                    arrayOf(binding.tietName.text?.toString(), binding.tietCount.text?.toString())
+                )
+            }
         }
     }
 
     private fun launchAddMode() {
         binding.button.setOnClickListener {
-            viewModel.addShopItem(
-                binding.tietName.text?.toString(),
-                binding.tietCount.text?.toString()
-            )
+//            viewModel.addShopItem(
+//                binding.tietName.text?.toString(),
+//                binding.tietCount.text?.toString()
+//            )
+            thread {
+                context?.contentResolver?.insert(
+                    Uri.parse("content://com.example.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put("id", 0)
+                        put("name", binding.tietName.text?.toString())
+                        put("count", binding.tietCount.text?.toString()?.toInt())
+                        put("enabled", true)
+                    }
+                )
+            }
         }
     }
 

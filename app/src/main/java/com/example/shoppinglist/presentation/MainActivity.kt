@@ -1,6 +1,8 @@
 package com.example.shoppinglist.presentation
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -10,7 +12,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityMainBinding
+import com.example.shoppinglist.domain.ShopItem
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
@@ -49,6 +53,25 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
                 launchFragment(ShopItemFragment.addNewFragmentAddItem())
             }
         }
+        val cursor = contentResolver.query(
+            Uri.parse("content://com.example.shoppinglist/shop_items"),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        while(cursor?.moveToNext() == true){
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow("count"))
+            val enabled = cursor.getInt(cursor.getColumnIndexOrThrow("enabled")) > 0
+
+            val shopItem = ShopItem(name, count, enabled, id)
+            Log.d("contentResolver", shopItem.toString())
+        }
+        cursor?.close()
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -96,7 +119,15 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = shopListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteShopItem(item)
+                //viewModel.deleteShopItem(item)
+                thread {
+                    contentResolver.delete(
+                        Uri.parse("content://com.example.shoppinglist/shop_items"),
+                        null,
+                        arrayOf(item.id.toString())
+                    )
+                }
+
                 Toast.makeText(
                     this@MainActivity,
                     getString(R.string.note_deleted, item.name),
