@@ -1,21 +1,17 @@
 package com.example.shoppinglist.presentation
 
-import android.content.ContentValues
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
 import com.example.shoppinglist.domain.ShopItem
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 class ShopItemFragment : Fragment() {
 
@@ -92,74 +88,58 @@ class ShopItemFragment : Fragment() {
 
     private fun addTextChangeListeners() {
 
-        binding.tietName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        binding.tietName.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 viewModel.resetErrorInputName()
             }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-        binding.tietCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        )
+        binding.tietCount.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 viewModel.resetErrorInputCount()
             }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
+        )
     }
 
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
         binding.button.setOnClickListener {
-//            viewModel.editShopItem(
-//                binding.tietName.text?.toString(),
-//                binding.tietCount.text?.toString()
-//            )
-            thread {
-                context?.contentResolver?.update(
-                    Uri.parse("content://com.example.shoppinglist/shop_items"),
-                    ContentValues().apply {
-                        put("id", shopItemId)
-//                        put("name", binding.tietName.text?.toString())
-//                        put("count", binding.tietCount.text?.toString()?.toInt())
-//                        put("enabled", true)
-                    },
-                    null,
-                    arrayOf(binding.tietName.text?.toString(), binding.tietCount.text?.toString())
-                )
-            }
+            viewModel.editShopItem(
+                binding.tietName.text?.toString(),
+                binding.tietCount.text?.toString()
+            )
+//            thread {
+//                context?.contentResolver?.update(
+//                    Uri.parse("content://com.example.shoppinglist/shop_items"),
+//                    ContentValues().apply {
+//                        put("id", shopItemId)
+////                        put("name", binding.tietName.text?.toString())
+////                        put("count", binding.tietCount.text?.toString()?.toInt())
+////                        put("enabled", true)
+//                    },
+//                    null,
+//                    arrayOf(binding.tietName.text?.toString(), binding.tietCount.text?.toString())
+//                )
+//            }
         }
     }
 
     private fun launchAddMode() {
         binding.button.setOnClickListener {
-//            viewModel.addShopItem(
-//                binding.tietName.text?.toString(),
-//                binding.tietCount.text?.toString()
-//            )
-            thread {
-                context?.contentResolver?.insert(
-                    Uri.parse("content://com.example.shoppinglist/shop_items"),
-                    ContentValues().apply {
-                        put("id", 0)
-                        put("name", binding.tietName.text?.toString())
-                        put("count", binding.tietCount.text?.toString()?.toInt())
-                        put("enabled", true)
-                    }
-                )
-            }
+            viewModel.addShopItem(
+                binding.tietName.text?.toString(),
+                binding.tietCount.text?.toString()
+            )
+//            thread {
+//                context?.contentResolver?.insert(
+//                    Uri.parse("content://com.example.shoppinglist/shop_items"),
+//                    ContentValues().apply {
+//                        put("id", 0)
+//                        put("name", binding.tietName.text?.toString())
+//                        put("count", binding.tietCount.text?.toString()?.toInt())
+//                        put("enabled", true)
+//                    }
+//                )
+//            }
         }
     }
 

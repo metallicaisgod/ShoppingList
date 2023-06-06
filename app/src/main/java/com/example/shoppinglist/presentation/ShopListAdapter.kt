@@ -1,9 +1,7 @@
 package com.example.shoppinglist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
@@ -25,7 +23,7 @@ class ShopListAdapter
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val layoutId = when(viewType){
+        val layoutId = when (viewType) {
             ENABLED_ITEM -> R.layout.item_shop_enabled
             DISABLED_ITEM -> R.layout.item_shop_disabled
             else -> throw RuntimeException("Unknown view type: $viewType")
@@ -50,7 +48,7 @@ class ShopListAdapter
         binding.root.setOnClickListener {
             onShopItemClickListener?.invoke(shopItem)
         }
-        when(binding) {
+        when (binding) {
             is ItemShopEnabledBinding -> {
                 binding.tvName.text = shopItem.name
                 binding.tvCount.text = shopItem.count.toString()
@@ -63,14 +61,14 @@ class ShopListAdapter
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(getItem(position).enabled) {
+        return if (getItem(position).enabled) {
             ENABLED_ITEM
         } else {
             DISABLED_ITEM
         }
     }
 
-    companion object{
+    companion object {
         const val ENABLED_ITEM = 1001
         const val DISABLED_ITEM = 1002
 
